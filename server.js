@@ -41,7 +41,8 @@ const githubUserNames = [
 	"drishya-dobriyal",
 	"photongupta",
   "bcalm",
-  "luciferankon"
+  "luciferankon",
+  "cksharma11"
 ];
 
 const generateDataForReports = (req, res) => {
