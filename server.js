@@ -57,7 +57,7 @@ const generateDataForReports = (req, res) => {
 						.filter(result => result["pusher"] == username)
 						.map(result => {
 							return {
-								sha: "sha1234",
+								sha: result["sha"],
 								total: result["result"]["total"],
 								passed: result["result"]["passed"].length,
 								failed: result["result"]["failed"].length,
