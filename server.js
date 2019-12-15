@@ -65,7 +65,8 @@ const generateDataForReports = (req, res) => {
 								failedSuites: result["result"]["failed"].map(
 									testCase => testCase.title
 								),
-								time: result["time"]
+                time: result["time"],
+                project: result["project"]
 							};
 						});
         });
