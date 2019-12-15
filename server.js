@@ -66,7 +66,8 @@ const generateDataForReports = (req, res) => {
 								time: result["time"]
 							};
 						});
-				});
+        });
+        res.setHeader("Access-Control-Allow-Origin", "*");
 				res.send(dataForReports);
 			});
 	});
