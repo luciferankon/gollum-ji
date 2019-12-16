@@ -43,7 +43,7 @@ const githubUserNames = [
 	"bcalm"
 ];
 
-const generateDataForReports = (req, res) => {
+const generateDataForTest = (req, res) => {
 	MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
 		const dbo = db.db("sauron_reporters");
 		dbo
@@ -74,5 +74,34 @@ const generateDataForReports = (req, res) => {
 	});
 };
 
-app.get("/", generateDataForReports);
+const generateDataForLint = (req, res) => {
+	MongoClient.connect(uri, { useUnifiedTopology: true }, (err, db) => {
+		const dbo = db.db("sauron_reporters");
+		dbo
+			.collection("events")
+			.find({ job: "lint" })
+			.toArray((err, results) => {
+				let dataForReports = {};
+				githubUserNames.forEach(username => {
+					dataForReports[username] = results
+						.filter(result => result["pusher"] == username)
+						.map(result => {
+							return {
+								sha: result["sha"],
+								result: result["result"],
+								time: result["time"],
+								project: result["project"]
+							};
+						})
+						.reverse();
+				});
+				res.setHeader("Access-Control-Allow-Origin", "*");
+				res.send(dataForReports);
+			});
+	});
+};
+
+
+app.get("/test", generateDataForTest);
+app.get("/lint", generateDataForLint);
 app.listen(process.env.PORT || 8080);
