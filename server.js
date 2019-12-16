@@ -8,7 +8,7 @@ const githubUserNames = [
 	"bugdriver",
 	"trinangkur",
 	"sukhiboi",
-	"angrybirdno1",
+	"satheesh-chandran",
 	"shankarbyageli",
 	"shiviraj",
 	"symbiote-ux",
@@ -40,7 +40,7 @@ const githubUserNames = [
 	"apurvagurme",
 	"drishya-dobriyal",
 	"photongupta",
-  "bcalm"
+	"bcalm"
 ];
 
 const generateDataForReports = (req, res) => {
