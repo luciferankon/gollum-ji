@@ -66,7 +66,7 @@ const generateDataForReports = (req, res) => {
                 time: result["time"],
                 project: result["project"]
 							};
-						});
+						}).reverse();
         });
         res.setHeader("Access-Control-Allow-Origin", "*");
 				res.send(dataForReports);
