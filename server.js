@@ -105,8 +105,8 @@ const enqueueTestData = () => {
 					})
 					.reverse();
 			});
-			redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
 			redisClient.RPOP("testResult");
+			redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
 		});
 };
 
@@ -120,14 +120,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, database) => {
 });
 
 const generateDataForTest = (req, res) => {
-	redisClient.RPOP("testResult", (err, reply) => {
+	redisClient.BRPOP("testResult", (err, reply) => {
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.send(JSON.parse(reply));
 	});
 };
 
 const generateDataForLint = (req, res) => {
-	redisClient.RPOP("lintResult", (err, reply) => {
+	redisClient.BRPOP("lintResult", (err, reply) => {
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.send(JSON.parse(reply));
 	});
