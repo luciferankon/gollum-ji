@@ -49,35 +49,6 @@ const redisClient = redis.createClient({
 	db: 1
 });
 
-const enqueueTestData = () => {
-	dbo
-		.collection("events")
-		.find({ job: "test" })
-		.toArray((err, results) => {
-			let dataForReports = {};
-			githubUserNames.map(username => {
-				dataForReports[username] = results
-					.filter(result => result["pusher"] == username)
-					.map(result => {
-						return {
-							sha: result["sha"],
-							total: result["result"]["total"],
-							passed: result["result"]["passed"].length,
-							failed: result["result"]["failed"].length,
-							failedSuites: result["result"]["failed"].map(
-								testCase => testCase.title
-							),
-							time: result["time"],
-							project: result["project"]
-						};
-					})
-					.reverse();
-			});
-			redisClient.RPOP("testResult");
-			redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
-		});
-};
-
 const enqueueLintData = () => {
 	const dbo = db.db("sauron_reporters");
 	dbo
@@ -108,6 +79,37 @@ const enqueueLintData = () => {
 };
 
 let db;
+
+const enqueueTestData = () => {
+	const dbo = db.db("sauron_reporters");
+	dbo
+		.collection("events")
+		.find({ job: "test" })
+		.toArray((err, results) => {
+			let dataForReports = {};
+			githubUserNames.map(username => {
+				dataForReports[username] = results
+					.filter(result => result["pusher"] == username)
+					.map(result => {
+						return {
+							sha: result["sha"],
+							total: result["result"]["total"],
+							passed: result["result"]["passed"].length,
+							failed: result["result"]["failed"].length,
+							failedSuites: result["result"]["failed"].map(
+								testCase => testCase.title
+							),
+							time: result["time"],
+							project: result["project"]
+						};
+					})
+					.reverse();
+			});
+			redisClient.RPOP("testResult");
+			redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
+		});
+};
+
 MongoClient.connect(uri, { useUnifiedTopology: true }, (err, database) => {
 	db = database;
 	const port = process.env.PORT || 8080;
