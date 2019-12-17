@@ -105,8 +105,10 @@ const enqueueTestData = () => {
 					})
 					.reverse();
 			});
-			redisClient.RPOP("testResult");
-			redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
+			redisClient.LLEN("testResult", (err, reply) => {
+				if (reply > 1000) redisClient.flushall();
+				redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
+			});
 		});
 };
 
@@ -120,7 +122,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, database) => {
 });
 
 const generateDataForTest = (req, res) => {
-	redisClient.BRPOP("testResult", (err, reply) => {
+	redisClient.LPOP("testResult", (err, reply) => {
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.send(JSON.parse(reply));
 	});
