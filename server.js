@@ -105,8 +105,8 @@ const enqueueTestData = () => {
 					})
 					.reverse();
 			});
-			redisClient.RPOP("testResult");
 			redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
+			redisClient.RPOP("testResult");
 		});
 };
 
