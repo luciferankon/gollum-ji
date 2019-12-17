@@ -49,8 +49,6 @@ const redisClient = redis.createClient({
 	db: 1
 });
 
-console.log(redisClient)
-
 const enqueueLintData = () => {
 	const dbo = db.db("sauron_reporters");
 	dbo
@@ -107,10 +105,7 @@ const enqueueTestData = () => {
 					})
 					.reverse();
 			});
-			redisClient.LLEN("testResult", (err, reply) => {
-				if (reply > 1000) redisClient.flushall();
-				redisClient.LPUSH("testResult", JSON.stringify(dataForReports));
-			});
+				redisClient.SET("testResult", JSON.stringify(dataForReports));
 		});
 };
 
@@ -124,7 +119,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, database) => {
 });
 
 const generateDataForTest = (req, res) => {
-	redisClient.LPOP("testResult", (err, reply) => {
+	redisClient.GET("testResult", (err, reply) => {
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.send(JSON.parse(reply));
 	});
