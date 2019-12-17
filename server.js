@@ -49,6 +49,8 @@ const redisClient = redis.createClient({
 	db: 1
 });
 
+console.log(redisClient)
+
 const enqueueLintData = () => {
 	const dbo = db.db("sauron_reporters");
 	dbo
