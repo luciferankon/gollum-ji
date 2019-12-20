@@ -53,7 +53,7 @@ const enqueueLintData = () => {
 	const dbo = db.db("sauron_reporters");
 	dbo
 		.collection("events")
-		.find({ job: "lint" })
+		.find({ job: "lint", project:"jsTools" })
 		.toArray((err, results) => {
 			let dataForReports = {};
 			githubUserNames.forEach(username => {
@@ -84,7 +84,7 @@ const enqueueTestData = () => {
 	const dbo = db.db("sauron_reporters");
 	dbo
 		.collection("events")
-		.find({ job: "test" })
+		.find({ job: "test", project: "jsTools" })
 		.toArray((err, results) => {
 			let dataForReports = {};
 			githubUserNames.map(username => {
